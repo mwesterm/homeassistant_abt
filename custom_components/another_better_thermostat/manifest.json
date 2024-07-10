@@ -1,0 +1,20 @@
+{
+  "domain": "another_better_thermostat",
+  "name": "Another Better Thermostat",
+  "after_dependencies": [
+    "climate"
+  ],
+  "codeowners": [
+    "@mwesterm"
+  ],
+  "config_flow": true,
+  "dependencies": [
+    "climate",
+    "recorder"
+  ],
+  "documentation": "https://github.com/mwesterm/homeassistant_abt",
+  "iot_class": "local_push",
+  "issue_tracker": "https://github.com/mwesterm/homeassistant_abt/issues",
+  "requirements": [],
+  "version": "0.0.01"
+}

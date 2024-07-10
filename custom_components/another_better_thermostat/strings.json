@@ -1,0 +1,16 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "title": "Another Better Thermostat",
+                "description": "Setup Another Better Thermostat to integrate with Home Assistant\n",
+                "data": {
+                    "name": "Name",
+                    "thermostat": "The real thermostat",
+                    "temperature_sensor": "Temperature sensor",
+                    "tolerance": "Tolerance, to prevent the thermostat from turning on and off too often."
+                }
+            }
+        }
+    }
+}
