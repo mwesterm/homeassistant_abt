@@ -1,9 +1,14 @@
+# ruff: noqa: ANN001  # noqa: D100
+# ruff: noqa: ANN201
 import asyncio
 import logging
 
 from homeassistant.components.number.const import SERVICE_SET_VALUE
-from ..utils.helpers import find_local_calibration_entity
 from homeassistant.const import STATE_UNAVAILABLE, STATE_UNKNOWN
+
+from custom_components.another_better_thermostat.utils.helpers import (
+    find_local_calibration_entity,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -18,7 +23,7 @@ async def get_info(self, entity_id):
     return {"support_offset": support_offset, "support_valve": False}
 
 
-async def init(self, entity_id):
+async def init(self, entity_id):  # noqa: D103
     if (
         self.real_trvs[entity_id]["local_temperature_calibration_entity"] is None
         and self.real_trvs[entity_id]["calibration"] != 1
@@ -38,7 +43,7 @@ async def init(self, entity_id):
                 self.real_trvs[entity_id]["local_temperature_calibration_entity"]
             ).state in (STATE_UNAVAILABLE, STATE_UNKNOWN, None):
                 _LOGGER.info(
-                    "better_thermostat %s: waiting for TRV/climate entity with id '%s' to become fully available...",
+                    "better_thermostat %s: waiting for TRV/climate entity with id '%s' to become fully available...",  # noqa: E501
                     self.name,
                     self.real_trvs[entity_id]["local_temperature_calibration_entity"],
                 )
@@ -47,7 +52,7 @@ async def init(self, entity_id):
             _ready = False
             return
 
-    return None
+    return
 
 
 async def get_current_offset(self, entity_id):
@@ -60,8 +65,7 @@ async def get_current_offset(self, entity_id):
                 ).state
             )
         )
-    else:
-        return None
+    return None
 
 
 async def get_offset_steps(self, entity_id):
@@ -74,8 +78,7 @@ async def get_offset_steps(self, entity_id):
                 ).attributes.get("step", 1)
             )
         )
-    else:
-        return None
+    return None
 
 
 async def get_min_offset(self, entity_id):
@@ -88,8 +91,7 @@ async def get_min_offset(self, entity_id):
                 ).attributes.get("min", -10)
             )
         )
-    else:
-        return -6
+    return -6
 
 
 async def get_max_offset(self, entity_id):
@@ -102,8 +104,7 @@ async def get_max_offset(self, entity_id):
                 ).attributes.get("max", 10)
             )
         )
-    else:
-        return 6
+    return 6
 
 
 async def set_temperature(self, entity_id, temperature):
@@ -166,10 +167,9 @@ async def set_offset(self, entity_id, offset):
             )
 
         return offset
-    else:
-        return  # Not supported
+    return None  # Not supported
 
 
-async def set_valve(self, entity_id, valve):
+async def set_valve(self, entity_id, valve)->None:  # noqa: ARG001
     """Set new target valve."""
     return  # Not supported

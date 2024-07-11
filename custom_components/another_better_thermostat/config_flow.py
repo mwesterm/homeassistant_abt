@@ -1,7 +1,6 @@
 """Adds config flow for Blueprint."""
 
 from __future__ import annotations
-from os import error
 
 import voluptuous as vol
 from homeassistant import config_entries, data_entry_flow
@@ -12,15 +11,16 @@ from homeassistant.helpers.aiohttp_client import (
 )
 
 from custom_components.another_better_thermostat.adapters.delegate import load_adapter
-from .utils.helpers import get_device_model, get_trv_intigration
+from custom_components.another_better_thermostat.utils.helpers import (
+    get_device_model,
+    get_trv_intigration,
+)
 
 from .utils.const import (
     CONF_HEATER,
-    CONF_HUMIDITY,
     CONF_MODEL,
     CONF_NAME,
     CONF_SENSOR,
-    CONF_SENSOR_WINDOW,
     DOMAIN,
     LOGGER,
 )
@@ -68,7 +68,7 @@ class ABTFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                         }
                     )
                 self.data[CONF_MODEL] = "/".join([x["model"] for x in self.trv_bundle])
-                return await self.async_step_advanced(None, self.trv_bundle[0])
+                return await self.async_step_confirm(None)
 
         user_input = user_input or {}
 
@@ -94,20 +94,19 @@ class ABTFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         )
 
     async def async_step_confirm(
-        self, user_input: dict | None = None, confirm_type=None
+        self, user_input: dict | None = None, confirm_type=None  # noqa: ANN001
     ) -> data_entry_flow.FlowResult:
         """Config Flow Step 1."""
         errors = {}
         self.data[CONF_HEATER] = self.trv_bundle
-        if user_input is not None:
-            if self.data is not None:
-                LOGGER.debug("Confirm: %s", self.data[CONF_HEATER])
-                unique_trv_string = "_".join([x["trv"] for x in self.data[CONF_HEATER]])
-                await self.async_set_unique_id(
-                    f"{self.data['name']}_{unique_trv_string}"
-                )
-                self._abort_if_unique_id_configured()
-                return self.async_create_entry(title=self.data["name"], data=self.data)
+        if user_input is not None and self.data is not None:
+            LOGGER.debug("Confirm: %s", self.data[CONF_HEATER])
+            unique_trv_string = "_".join([x["trv"] for x in self.data[CONF_HEATER]])
+            await self.async_set_unique_id(
+                f"{self.data['name']}_{unique_trv_string}"
+            )
+            self._abort_if_unique_id_configured()
+            return self.async_create_entry(title=self.data["name"], data=self.data)
         if confirm_type is not None:
             errors["base"] = confirm_type
         _trvs = ",".join([x["trv"] for x in self.data[CONF_HEATER]])
