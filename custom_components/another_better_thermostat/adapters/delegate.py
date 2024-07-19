@@ -14,22 +14,22 @@ def load_adapter(self, integration, entity_id, get_name=False):
 
     try:
         self.adapter = import_module(
-            "custom_components.better_thermostat.adapters." + integration,
-            package="better_thermostat",
+            "custom_components.another_better_thermostat.adapters." + integration,
+            package="another_better_thermostat",
         )
         _LOGGER.debug(
-            "better_thermostat %s: uses adapter %s for trv %s",
+            "another_better_thermostat %s: uses adapter %s for trv %s",
             self.name,
             integration,
             entity_id,
         )
     except Exception:
         self.adapter = import_module(
-            "custom_components.better_thermostat.adapters.generic",
+            "custom_components.another_better_thermostat.adapters.generic",
             package="better_thermostat",
         )
         _LOGGER.info(
-            "better_thermostat %s: integration: %s isn't native supported, feel free to open an issue, fallback adapter %s",
+            "another_better_thermostat %s: integration: %s isn't native supported, feel free to open an issue, fallback adapter %s",
             self.name,
             integration,
             "generic",

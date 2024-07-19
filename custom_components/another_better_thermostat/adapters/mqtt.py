@@ -6,10 +6,8 @@ import logging
 from homeassistant.components.number.const import SERVICE_SET_VALUE
 from homeassistant.const import STATE_UNAVAILABLE, STATE_UNKNOWN
 
-from custom_components.another_better_thermostat.utils.helpers import (
-    find_local_calibration_entity,
-    find_valve_entity,
-)
+from custom_components.another_better_thermostat.utils.helpers import find_valve_entity, find_local_calibration_entity
+
 
 from .generic import (
     set_hvac_mode as generic_set_hvac_mode,
@@ -21,7 +19,7 @@ from .generic import (
 _LOGGER = logging.getLogger(__name__)
 
 
-async def get_info(self, entity_id)->tuple:
+async def get_info(self, entity_id) -> tuple:
     """Get info from TRV."""
     support_offset = False
     support_valve = False
@@ -34,7 +32,7 @@ async def get_info(self, entity_id)->tuple:
     return {"support_offset": support_offset, "support_valve": support_valve}
 
 
-async def init(self, entity_id)->None:
+async def init(self, entity_id) -> None:
     """Init mqtt-trv."""
     if (
         self.real_trvs[entity_id]["local_temperature_calibration_entity"] is None
@@ -56,8 +54,8 @@ async def init(self, entity_id)->None:
             ).state in (STATE_UNAVAILABLE, STATE_UNKNOWN, None):
                 _LOGGER.info(
                     "another_better_thermostat %s:"
-                     " waiting for TRV/climate entity"
-                     "with id '%s' to become fully available...",
+                    " waiting for TRV/climate entity"
+                    "with id '%s' to become fully available...",
                     self.name,
                     self.real_trvs[entity_id]["local_temperature_calibration_entity"],
                 )
@@ -79,18 +77,18 @@ async def init(self, entity_id)->None:
             )
 
 
-async def set_temperature(self, entity_id, temperature)->None:
+async def set_temperature(self, entity_id, temperature) -> None:
     """Set new target temperature."""
     return await generic_set_temperature(self, entity_id, temperature)
 
 
-async def set_hvac_mode(self, entity_id, hvac_mode)->None:
+async def set_hvac_mode(self, entity_id, hvac_mode) -> None:
     """Set new target hvac mode."""
     await generic_set_hvac_mode(self, entity_id, hvac_mode)
     await asyncio.sleep(3)
 
 
-async def get_current_offset(self, entity_id)->float:
+async def get_current_offset(self, entity_id) -> float:
     """Get current offset."""
     return float(
         str(
@@ -101,7 +99,7 @@ async def get_current_offset(self, entity_id)->float:
     )
 
 
-async def get_offset_steps(self, entity_id)->float:
+async def get_offset_steps(self, entity_id) -> float:
     """Get offset steps."""
     return float(
         str(
@@ -112,7 +110,7 @@ async def get_offset_steps(self, entity_id)->float:
     )
 
 
-async def get_min_offset(self, entity_id)->float:
+async def get_min_offset(self, entity_id) -> float:
     """Get min offset."""
     return float(
         str(
@@ -171,7 +169,7 @@ async def set_offset(self, entity_id, offset):
 async def set_valve(self, entity_id, valve):
     """Set new target valve."""
     _LOGGER.debug(
-        "better_thermostat:%s : TO TRV  %s  set_valve: %d", self.name, entity_id,valve
+        "better_thermostat:%s : TO TRV  %s  set_valve: %d", self.name, entity_id, valve
     )
     await self.hass.services.async_call(
         "number",

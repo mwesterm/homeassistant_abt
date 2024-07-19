@@ -170,6 +170,6 @@ async def set_offset(self, entity_id, offset):
     return None  # Not supported
 
 
-async def set_valve(self, entity_id, valve)->None:  # noqa: ARG001
+async def set_valve(self, entity_id, valve) -> None:  # noqa: ARG001
     """Set new target valve."""
     return  # Not supported

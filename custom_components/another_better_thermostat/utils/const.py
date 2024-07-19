@@ -1,8 +1,15 @@
 """Constants for integration_blueprint."""
 
-from enum import IntFlag
+from enum import IntEnum, IntFlag, StrEnum
 from logging import Logger, getLogger
 from typing import Final
+
+import homeassistant.helpers.config_validation as cv
+import voluptuous as vol
+from homeassistant.const import ATTR_TEMPERATURE
+from homeassistant.helpers.config_validation import (
+    make_entity_service_schema,
+)
 
 LOGGER: Logger = getLogger(__package__)
 DOMAIN = "another_better_thermostat"
@@ -263,3 +270,27 @@ ATTR_STATE_BATTERIES = "batteries"
 SERVICE_RESTORE_SAVED_TARGET_TEMPERATURE = "restore_saved_target_temperature"
 SERVICE_SET_TEMP_TARGET_TEMPERATURE = "set_temp_target_temperature"
 SERVICE_RESET_HEATING_POWER = "reset_heating_power"
+
+
+class CalibrationMode(StrEnum):
+    """Calibration mode."""
+
+    DEFAULT = "default"
+    AGGRESIVE_CALIBRATION = "fix_calibration"
+    HEATING_POWER_CALIBRATION = "heating_power_calibration"
+    NO_CALIBRATION = "no_calibration"
+
+
+ANOTHER_BETTERTHERMOSTAT_SET_TEMPERATURE_SCHEMA = vol.All(
+    cv.has_at_least_one_key(ATTR_TEMPERATURE),
+    make_entity_service_schema(
+        {vol.Exclusive(ATTR_TEMPERATURE, "temperature"): vol.Coerce(float)}
+    ),
+)
+
+
+class AnotherBetterThermostatEntityFeature(IntEnum):
+    """Supported features of the climate entity."""
+
+    TARGET_TEMPERATURE = 1
+    TARGET_TEMPERATURE_RANGE = 2
